@@ -1,14 +1,632 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Civics &amp; Elections: Signal Pool</title>
-<link rel="stylesheet" href="./assets/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Civics &amp; Elections: Signal Pool</title>
+  <style>
+    /* 
+      Awwwards-Level Design System (Light Mode)
+      Strict 8px Baseline Grid & Extreme Typographic Hierarchy Contrast 
+    */
+    :root {
+      /* Grid / Baseline Unit: 8px */
+      --grid: 8px;
+
+      /* Color Palette (Editorial Light Theme) */
+      --bg: #FAFAFA;
+      --surface: #FFFFFF;
+      --border: #E5E7EB;
+      --border-dark: #111827;
+      
+      --text-main: #09090B;
+      --text-muted: #52525B;
+      --text-subtle: #A1A1AA;
+      
+      --accent: #EE1C25;      /* Bold Signal Red */
+      --accent-teal: #0891B2; /* Electric Teal */
+      --accent-gold: #D97706; /* Warm Amber */
+
+      /* High-Contrast Typographic Scale */
+      --font-display: "Display Helvetica", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+      --text-hero: clamp(3.5rem, 8vw, 7.5rem);   
+      --lh-hero: 0.95;
+
+      --text-h1: clamp(2.5rem, 5vw, 4.25rem);    
+      --lh-h1: 1.05;
+
+      --text-h2: clamp(1.5rem, 3vw, 2.25rem);    
+      --lh-h2: 1.15;
+
+      --text-body: 1.125rem;                      
+      --lh-body: 1.55;                           
+
+      --text-meta: 0.8125rem;                    
+      --lh-meta: 1.23;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: var(--lh-body);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Strict Baseline Vertical Alignment Helpers */
+    h1, h2, h3, p, ul, blockquote {
+      margin-bottom: calc(var(--grid) * 3); 
+    }
+
+    /* Fixed Editorial Top Bar */
+    .brand-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: calc(var(--grid) * 9); 
+      background: rgba(250, 250, 250, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 calc(var(--grid) * 5);
+      z-index: 1000;
+    }
+
+    .brand-logo {
+      font-family: var(--font-display);
+      font-size: var(--text-meta);
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-main);
+    }
+    .brand-logo span { color: var(--accent); }
+
+    .nav-toggles {
+      display: flex;
+      gap: calc(var(--grid) * 2);
+    }
+
+    .toggle-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: calc(var(--grid) * 1) calc(var(--grid) * 2.5);
+      border-radius: 100px;
+      font-size: var(--text-meta);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toggle-btn:hover, .toggle-btn.active {
+      background: var(--text-main);
+      color: var(--surface);
+      border-color: var(--text-main);
+    }
+
+    /* Layout Sections & Generous Spacing */
+    .view-section {
+      display: none;
+      padding-top: calc(var(--grid) * 18); 
+      padding-bottom: calc(var(--grid) * 16); 
+      min-height: 100vh;
+    }
+    .view-section.active-view {
+      display: block;
+    }
+
+    /* ==========================================================================
+       VIEW 1: AIDA PERSUASIVE PITCH SECTION
+       ========================================================================== */
+    .aida-container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding-left: calc(var(--grid) * 4);
+      padding-right: calc(var(--grid) * 4);
+    }
+
+    .aida-hero {
+      margin-bottom: calc(var(--grid) * 12); 
+      border-bottom: 2px solid var(--border-dark);
+      padding-bottom: calc(var(--grid) * 8);
+    }
+
+    .eyebrow {
+      font-size: var(--text-meta);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 800;
+      display: block;
+      margin-bottom: calc(var(--grid) * 2);
+    }
+
+    .aida-hero h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-hero);
+      line-height: var(--lh-hero);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--text-main);
+      text-transform: uppercase;
+      margin-bottom: calc(var(--grid) * 4);
+    }
+
+    .aida-hero p.lead {
+      font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+      line-height: 1.35;
+      color: var(--text-muted);
+      max-width: 42ch;
+      font-weight: 400;
+    }
+
+    /* AIDA Content Cards Grid */
+    .aida-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: calc(var(--grid) * 6); 
+      margin-bottom: calc(var(--grid) * 12);
+    }
+
+    .aida-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0px; 
+      padding: calc(var(--grid) * 6);
+      position: relative;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+      transition: border-color 0.2s ease;
+    }
+    .aida-card:hover {
+      border-color: var(--border-dark);
+    }
+
+    .aida-badge {
+      display: inline-block;
+      padding: calc(var(--grid) * 0.5) calc(var(--grid) * 1.5);
+      font-size: var(--text-meta);
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: calc(var(--grid) * 3);
+      border-radius: 2px;
+    }
+    .badge-a { background: #FEE2E2; color: var(--accent); }
+    .badge-i { background: #E0F2FE; color: var(--accent-teal); }
+    .badge-d { background: #FEF3C7; color: var(--accent-gold); }
+    .badge-a-action { background: var(--text-main); color: var(--surface); }
+
+    .aida-card h2 {
+      font-size: var(--text-h2);
+      line-height: var(--lh-h2);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      margin-bottom: calc(var(--grid) * 3);
+    }
+
+    .aida-card p {
+      font-size: var(--text-body);
+      line-height: var(--lh-body);
+      color: var(--text-muted);
+      max-width: 68ch;
+    }
+
+    .aida-card ul {
+      list-style: none;
+      margin-top: calc(var(--grid) * 3);
+      border-top: 1px solid var(--border);
+      padding-top: calc(var(--grid) * 3);
+    }
+    .aida-card ul li {
+      position: relative;
+      padding-left: calc(var(--grid) * 3);
+      margin-bottom: calc(var(--grid) * 2);
+      color: var(--text-muted);
+      font-size: var(--text-body);
+    }
+    .aida-card ul li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 900;
+    }
+
+    /* Editorial Call to Action */
+    .cta-box {
+      background: var(--text-main);
+      color: var(--surface);
+      padding: calc(var(--grid) * 10) calc(var(--grid) * 6);
+      text-align: left;
+      position: relative;
+    }
+    .cta-box h2 {
+      font-size: var(--text-h1);
+      line-height: var(--lh-h1);
+      color: var(--surface);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+    .cta-box p {
+      color: #A1A1AA;
+      font-size: var(--text-body);
+      max-width: 54ch;
+      margin-bottom: calc(var(--grid) * 5);
+    }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: calc(var(--grid) * 2);
+      background: var(--surface);
+      color: var(--text-main);
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: calc(var(--grid) * 2.5) calc(var(--grid) * 5);
+      border: none;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cta-btn:hover {
+      transform: translateX(8px);
+    }
+
+    /* ==========================================================================
+       VIEW 2: PRESENTATION DECK VIEW (ORIGINAL CONTENT)
+       ========================================================================== */
+    .slide-deck {
+      position: relative;
+      height: calc(100vh - calc(var(--grid) * 18));
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0 calc(var(--grid) * 8);
+    }
+    .slide.active { display: flex; }
+    .slide-inner { max-width: 840px; width: 100%; }
+
+    .slide h1 {
+      font-size: var(--text-h1);
+      line-height: var(--lh-h1);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: calc(var(--grid) * 4);
+    }
+    .slide .body {
+      font-size: var(--text-body);
+      line-height: var(--lh-body);
+      color: var(--text-muted);
+    }
+    .slide .muted { color: var(--text-subtle); margin-top: calc(var(--grid) * 2); }
+
+    ul.themes { list-style: none; display: flex; flex-direction: column; gap: calc(var(--grid) * 3); }
+    ul.themes li { border-left: 3px solid var(--text-main); padding-left: calc(var(--grid) * 3); }
+    ul.themes .tier { display: block; font-size: var(--text-meta); letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); font-weight: 800; }
+    ul.themes .tt { display: block; font-weight: 800; font-size: 1.25rem; color: var(--text-main); }
+    ul.themes .td { display: block; color: var(--text-muted); font-size: 1rem; margin-top: 4px; }
+
+    ul.tension-list { list-style: none; margin-top: calc(var(--grid) * 2); }
+    ul.tension-list li { border-left: 2px solid var(--border); padding-left: calc(var(--grid) * 2); margin-bottom: calc(var(--grid) * 2); }
+    ul.tension-list .tmeta { display: block; color: var(--text-subtle); font-size: 0.875rem; }
+
+    .deck-nav {
+      position: absolute;
+      bottom: calc(var(--grid) * 4);
+      left: 0; right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: calc(var(--grid) * 3);
+      z-index: 10;
+    }
+    .dots { display: flex; gap: calc(var(--grid) * 1.5); }
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%; border: none; background: var(--border); cursor: pointer;
+    }
+    .dot.on { background: var(--text-main); }
+    .arrow {
+      background: var(--surface); border: 1px solid var(--border); color: var(--text-main);
+      width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 1.2rem;
+    }
+    .arrow:hover { border-color: var(--text-main); }
+
+    /* ==========================================================================
+       VIEW 3: SENSEMAKING REPORT & MAP (ORIGINAL CONTENT)
+       ========================================================================== */
+    #report-container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 calc(var(--grid) * 4);
+    }
+    .site-head h1 { font-size: var(--text-h1); font-weight: 900; letter-spacing: -0.03em; margin-bottom: calc(var(--grid) * 1); }
+    .site-head .concept { font-size: var(--text-body); color: var(--text-muted); margin-bottom: calc(var(--grid) * 6); }
+    section.report-sec {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: calc(var(--grid) * 6);
+      margin-bottom: calc(var(--grid) * 6);
+    }
+    section.report-sec h2 { font-size: var(--text-h2); border-bottom: 1px solid var(--border); padding-bottom: calc(var(--grid) * 2); margin-bottom: calc(var(--grid) * 4); }
+    .map { width: 100%; height: auto; max-height: 70vh; border: 1px solid var(--border); background: #FAF9F6; }
+  </style>
 </head>
 <body>
-<main id="report"><p class="loading">Loading…</p></main>
-<script src="./data/site-data.js"></script>
-<script src="./assets/viewer.js"></script>
+
+  <!-- Top Navigation & View Switcher -->
+  <header class="brand-nav">
+    <div class="brand-logo">The <b>Upskilling Labs</b> <span>&bull;</span> Signal Pool</div>
+    <nav class="nav-toggles">
+      <button class="toggle-btn active" id="btn-pitch" onclick="switchView('view-pitch')">Pod Pitch (AIDA)</button>
+      <button class="toggle-btn" id="btn-deck" onclick="switchView('view-deck')">Slide Deck</button>
+      <button class="toggle-btn" id="btn-report" onclick="switchView('view-report')">Sensemaking Map</button>
+    </nav>
+  </header>
+
+  <!-- VIEW 1: AIDA Persuasive Pitch Section (Focused on Problem Importance) -->
+  <main id="view-pitch" class="view-section aida-container active-view">
+    <header class="aida-hero">
+      <span class="eyebrow">Problem Situation Pitch</span>
+      <h1>A System Breakdown That Demands Our Attention</h1>
+      <p class="lead">Citizens face structural barriers and a catastrophic trust deficit that prevent meaningful engagement in democratic life[cite: 1]. This isn't a surface-level friction—it is an urgent systemic crisis[cite: 1].</p>
+    </header>
+
+    <div class="aida-grid">
+      <!-- Attention -->
+      <article class="aida-card">
+        <span class="aida-badge badge-a">Attention</span>
+        <h2>Citizens are systematically locked out of the decisions that govern their lives.</h2>
+        <p>Democratic participation is collapsing not because people don't care, but because institutional structures actively alienate them[cite: 1]. Communities are left without accessible channels to represent their true needs, leading to widespread public erosion of trust and disenfranchisement[cite: 1].</p>
+      </article>
+
+      <!-- Interest -->
+      <article class="aida-card">
+        <span class="aida-badge badge-i">Interest</span>
+        <h2>The evidence reveals deep, entrenched paradoxes that sustain this failure.</h2>
+        <p>Across 14 synthesized source extracts, the data exposes systemic mechanisms designed to protect status quo interests over public agency[cite: 1]:</p>
+        <ul>
+          <li><strong>Eroded Public Trust &amp; Resources:</strong> Communities face severe resource gaps and lack safe, neutral environments to engage or hold power accountable[cite: 1].</li>
+          <li><strong>Pre-Shaped Participation:</strong> Incumbents and institutional players pre-determine choices and rules before citizens ever get a say[cite: 1].</li>
+          <li><strong>Limited Public Agency:</strong> Ordinary voters—especially underrepresented groups—are left with zero leverage against nationalized, hyper-polished political engines[cite: 1].</li>
+        </ul>
+      </article>
+
+      <!-- Desire -->
+      <article class="aida-card">
+        <span class="aida-badge badge-d">Desire</span>
+        <h2>This is the exact high-impact problem our lab was built to tackle.</h2>
+        <p>If we want to work on problems that truly matter, this candidate paradox stands out[cite: 1]. It sits directly at the intersection of power, equity, and trust[cite: 1]. By selecting this problem situation, our research pod gets to dive deep into a live, critical inquiry that affects every civic ecosystem we operate in[cite: 1].</p>
+      </article>
+    </div>
+
+    <!-- Action -->
+    <section class="cta-box">
+      <span class="aida-badge badge-a-action">Action</span>
+      <h2>Vote to Form the Civics &amp; Elections Pod</h2>
+      <p>Give this problem your vote so we can form a pod and launch a Dorstian frame creation process to untangle it[cite: 1].</p>
+      <a class="cta-btn" href="https://theupskillinglabs.org/cycles/2/proposals" target="_blank" rel="noopener noreferrer">See this problem situation in the Cycle Gallery &rarr;</a>
+    </section>
+  </main>
+
+  <!-- VIEW 2: Presentation Deck (Original Content Preserved) -->
+  <section id="view-deck" class="view-section">
+    <div class="slide-deck">
+      <section class="slide cover active" data-i="0">
+        <div class="slide-inner">
+          <span class="eyebrow">Meet the Pod</span>
+          <h1>Strengthening Trust and Civic Engagement Space</h1>
+          <div class="body">
+            <p>Creating open access points and environments conducive to addressing gaps in resources and trust for communities to engage[cite: 1].</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide para" data-i="1">
+        <div class="slide-inner">
+          <span class="eyebrow">The Paradox</span>
+          <h1>Why this stays stuck</h1>
+          <div class="body">
+            <p>Candidate Paradox 1: The Democratic Legitimacy Paradox (Institutional Level)...[cite: 1]</p>
+            <p class="muted"><strong>Who benefits from the status quo:</strong> Incumbents &amp; High-Propensity Voter Coalitions; Political Tech &amp; Strategy Vendors[cite: 1].</p>
+            <p class="muted"><strong>Other tensions we're holding:</strong></p>
+            <ul class="tension-list">
+              <li>Administrative Defensive Shield Paradox<span class="tmeta">Benefits: Campaign Consultants &amp; PR Strategists[cite: 1]</span></li>
+              <li>Nationalized Megaphone vs. Local Blind Spot<span class="tmeta">Benefits: Entrenched interests and national party fundraisers[cite: 1]</span></li>
+              <li>Demand for Authenticity vs. Hyper-Polished Trap<span class="tmeta">Benefits: Established political incumbents and wealthy donors[cite: 1]</span></li>
+            </ul>
+            <p class="muted tiny">Sharpness self-check (pod-declared): 3/3[cite: 1]</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide warrant" data-i="2">
+        <div class="slide-inner">
+          <span class="eyebrow">How we know</span>
+          <h1>The evidence is the warrant</h1>
+          <div class="body">
+            <p>No client handed us this problem &mdash; the evidence did[cite: 1]. This paradox was read off <strong>14 source extracts</strong> across <strong>1 named theme</strong>[cite: 1].</p>
+            <p class="muted">&bull; Representatives Without Accountability &mdash; Representatives don't seem to answer to the people...[cite: 1]</p>
+            <p class="muted">&bull; Accountability for Public Lies &mdash; Telling the truth and holding liars accountable...[cite: 1]</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide themes" data-i="3">
+        <div class="slide-inner">
+          <span class="eyebrow">What we found</span>
+          <h1>The themes beneath it</h1>
+          <div class="body">
+            <ul class="themes">
+              <li><span class="tier">Super-theme</span><span class="tt">Limited Agency</span><span class="td">Some voters and communities are less able to represent their needs on a national scale[cite: 1].</span></li>
+              <li><span class="tier">Theme</span><span class="tt">Public trust and resources eroded</span><span class="td">Lack of resources and meaningful engagement contribute to citizens not being able to engage[cite: 1].</span></li>
+              <li><span class="tier">Theme</span><span class="tt">Pre-shaped democratic participation</span><span class="td">Authorities and incumbent power holders decide the field before ordinary voters can exercise choice[cite: 1].</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide field" data-i="4">
+        <div class="slide-inner">
+          <span class="eyebrow">The Field</span>
+          <h1>Who this touches</h1>
+          <div class="body">
+            <p class="muted"><strong>Voices we still need:</strong> Regional DMV as a starter, neutral non-partisan engagement groups (college campuses, voting organizations)[cite: 1].</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide testing" data-i="5">
+        <div class="slide-inner">
+          <span class="eyebrow">What we're still testing</span>
+          <h1>This is a live inquiry</h1>
+          <div class="body">
+            <p class="muted">We formed around evidence, not a brief &mdash; so we bring our open questions with us[cite: 1].</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide join" data-i="6">
+        <div class="slide-inner">
+          <span class="eyebrow">Join us</span>
+          <h1>Build with the Civics &amp; Elections: Signal Pool pod</h1>
+          <div class="body">
+            <p>We're forming a pod around this paradox[cite: 1]. If it pulls at you, come help us frame it &mdash; and find the problem owner who can move it[cite: 1].</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="deck-nav">
+        <button class="arrow" id="prev" aria-label="Previous">&larr;</button>
+        <div class="dots" id="dots">
+          <button class="dot on" data-i="0" aria-label="Slide 1"></button>
+          <button class="dot" data-i="1" aria-label="Slide 2"></button>
+          <button class="dot" data-i="2" aria-label="Slide 3"></button>
+          <button class="dot" data-i="3" aria-label="Slide 4"></button>
+          <button class="dot" data-i="4" aria-label="Slide 5"></button>
+          <button class="dot" data-i="5" aria-label="Slide 6"></button>
+          <button class="dot" data-i="6" aria-label="Slide 7"></button>
+        </div>
+        <button class="arrow" id="next" aria-label="Next">&rarr;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIEW 3: Sensemaking Report & Map Section (Original Content Preserved) -->
+  <section id="view-report" class="view-section">
+    <div id="report-container">
+      <main id="report"></main>
+    </div>
+  </section>
+
+  <script>
+    // Navigation Switcher Logic
+    function switchView(viewId) {
+      document.querySelectorAll('.view-section').forEach(function(sec) {
+        sec.classList.remove('active-view');
+      });
+      document.querySelectorAll('.toggle-btn').forEach(function(btn) {
+        btn.classList.remove('active');
+      });
+      
+      document.getElementById(viewId).classList.add('active-view');
+      
+      if(viewId === 'view-pitch') document.getElementById('btn-pitch').classList.add('active');
+      if(viewId === 'view-deck') document.getElementById('btn-deck').classList.add('active');
+      if(viewId === 'view-report') document.getElementById('btn-report').classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    // Embedded Dataset from project.jsonld & site-data.js
+    var SITE_DATA = {
+      project: {
+        title: "Civics & Elections: Signal Pool",
+        concept: "Frame Creation Web Map",
+        "@graph": [
+          { "@id": "item_1", "type": "Source Extract", "tier": 0, "title": "Barriers to Engage", "x": 0, "y": 300, "w": 240, "h": 110 },
+          { "@id": "item_2", "type": "Source Extract", "tier": 0, "title": "Safety", "x": 296, "y": 300, "w": 240, "h": 110 },
+          { "@id": "item_3", "type": "Source Extract", "tier": 0, "title": "Spaces to Talk", "x": 592, "y": 300, "w": 240, "h": 110 }
+        ]
+      },
+      content: {
+        situation: "# Problem Situation\nCitizens face severe structural barriers and trust deficits in participating in public processes.",
+        themes: "# Themes\n- **Limited Agency**: Voters lack scale.\n- **Eroded Trust**: Lack of accessible engagement."
+      },
+      extractsCsv: "title,summary,url\nBarriers to Engage,Youth & Minority civics barriers,\nSafety,Physical and psychological safety concerns,"
+    };
+
+    // Sensemaking Map Renderer Logic
+    (function(){
+      function byId(id){ return document.getElementById(id); }
+      function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+      function tierColor(t){ var m={0:'#8a93a3',1:'#8a93a3',2:'#ee1c25',3:'#f4b400',4:'#8a4fff'}; return m[t]||'#3a2580'; }
+      
+      function renderMap(graph){
+        if(!graph||!graph.length) return '<p>No nodes to display.</p>';
+        var minX=1e9, minY=1e9, maxX=-1e9, maxY=-1e9, i;
+        for(i=0;i<graph.length;i++){ var n=graph[i]; minX=Math.min(minX,n.x); minY=Math.min(minY,n.y); maxX=Math.max(maxX,n.x+n.w); maxY=Math.max(maxY,n.y+n.h); }
+        var pad=60, vb=(minX-pad)+' '+(minY-pad)+' '+((maxX-minX)+2*pad)+' '+((maxY-minY)+2*pad);
+        var rects='';
+        for(i=0;i<graph.length;i++){
+          var nn=graph[i], col=tierColor(nn.tier);
+          rects+='<g><rect x="'+nn.x+'" y="'+nn.y+'" width="'+nn.w+'" height="'+nn.h+'" rx="4" fill="#ffffff" stroke="'+col+'" stroke-width="2"/>'
+            +'<text x="'+(nn.x+12)+'" y="'+(nn.y+24)+'" font-size="12" font-weight="800" fill="'+col+'">'+esc(nn.type)+'</text>'
+            +'<text x="'+(nn.x+12)+'" y="'+(nn.y+46)+'" font-size="14" fill="#09090B">'+esc((nn.title||'').slice(0,42))+'</text></g>';
+        }
+        return '<svg class="map" viewBox="'+vb+'" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Spatial web map">'+rects+'</svg>';
+      }
+
+      function renderReport(data){
+        var p=data.project||{}, graph=p['@graph']||[], html='';
+        html+='<header class="site-head"><h1>'+esc(p.title||'Untitled')+'</h1>';
+        if(p.concept) html+='<p class="concept">'+esc(p.concept)+'</p>';
+        html+='</header>';
+        html+='<section class="report-sec map-wrap"><h2>Web map</h2>'+renderMap(graph)+'</section>';
+        byId('report').innerHTML = html;
+      }
+
+      renderReport(SITE_DATA);
+    })();
+
+    // Slide Deck Controls Logic
+    (function(){
+      var slides = [].slice.call(document.querySelectorAll("#view-deck .slide"));
+      var dots = [].slice.call(document.querySelectorAll("#view-deck .dot"));
+      var i = 0;
+      function go(n){
+        i = Math.max(0, Math.min(slides.length - 1, n));
+        slides.forEach(function(s, k){ s.classList.toggle("active", k === i); });
+        dots.forEach(function(d, k){ d.classList.toggle("on", k === i); });
+      }
+      document.getElementById("next").onclick = function(){ go(i + 1); };
+      document.getElementById("prev").onclick = function(){ go(i - 1); };
+      dots.forEach(function(d){ d.onclick = function(){ go(+d.getAttribute("data-i")); }; });
+      document.addEventListener("keydown", function(e){
+        if(!document.getElementById('view-deck').classList.contains('active-view')) return;
+        if(e.key === "ArrowRight" || e.key === " ") go(i + 1);
+        else if(e.key === "ArrowLeft") go(i - 1);
+      });
+    })();
+  </script>
 </body>
 </html>
