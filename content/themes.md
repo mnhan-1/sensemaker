@@ -109,24 +109,6 @@ Lack of resources and meaningful engagement contribute to citizens not being abl
       - Signal "Complacency & Candidate Deterrence": The average citizen doesn't feel they can make a difference, and good people stay away from political office because media can form any narrative it wants about them.
       - Signal "Constituent Mail Black Hole": Letters and emails to representatives feel like talking into a void — heartfelt messages come back as generic, strategist-polished boilerplate.
 
-## Theme: Public trust and resources eroded
-Lack of resources and meaningful engagement contribute to citizens not being able to engage.
-
-  • Pattern: Limited Access — People need more  structural and institutional support
-    • Evidence: Accessibility impacts engagement — Lack of accessibility to resources and time prevents people from engaging. Also people disenfranchised have a wider ladder gap to enter.
-      - Signal "Local Candidate Information Gaps": Voters lack easily accessible, actionable information about local county-level candidates, often relying heavily on name recognition from campaign signs.
-      - Signal "Logistical & Educational Barriers to Voting": Voting is burdened by physical hurdles (childcare, time off work) and a lack of plain-language education on how local elections directly impact citizens' daily lives.
-    • Evidence: Minority group limited access — Lack of resources and specific groups do not have sufficient access to engage. Barriers exist. 
-      - Signal "Women Still Under-Represented": Women remain under-represented in political leadership, even as women run for the highest offices.
-      - Signal "Student Technology Access Gap": Students lack access to equipment for training, and school technology funding isn't keeping up; grassroots fundraisers and lobbying for federal funding only go so far.
-  • Pattern: Civic Engagement are Elusive  — Civic engagement happening in silos and per issue. 
-    • Evidence: Barriers to Engage — Entry ways into civic engagement either hard to navigate or does not have strong recruitment. 
-      - Signal "Civics Talent Pipeline Shortage": There is a noticeable shortage of talent to fill junior roles within the civics and elections workforce.
-      - Signal "Anemic, Uneven Participation": Civic participation is thin, and only some voices get heard and lifted.
-    • Evidence: Need for collective space  — People are feeling diconnected and disempowered. 
-      - Signal "Complacency & Candidate Deterrence": The average citizen doesn't feel they can make a difference, and good people stay away from political office because media can form any narrative it wants about them.
-      - Signal "Constituent Mail Black Hole": Letters and emails to representatives feel like talking into a void — heartfelt messages come back as generic, strategist-polished boilerplate.
-
 ## Theme: Pre-shaped democratic participation
 Authorities and incumbent power holders decide the field before ordinary voters can exercise choice, by controlling both access to participation and the competitiveness of the contest itself.
 
